@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Silent Pandemic - Dashboard</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <!-- Header / Controls -->
+        <header class="top-bar">
+            <h1 class="glow-text">Silent Pandemic</h1>
+            <div class="header-status">
+                <span class="status-indicator"></span> System Online
+            </div>
+            <div class="simulation-controls">
+                <button id="run-sim-btn" class="btn btn-primary">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" class="btn-icon">
+                        <path d="M5 3l14 9-14 9V3z" fill="currentColor" />
+                    </svg>
+                    Run Simulation
+                </button>
+                <button id="reset-sim-btn" class="btn btn-secondary">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        class="btn-icon">
+                        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                        <path d="M3 3v5h5" />
+                    </svg>
+                    Reset
+                </button>
+            </div>
+        </header>
+
+        <main class="grid-layout">
+            <!-- Left Panel -->
+            <aside class="left-panel">
+                <div class="card module-card" id="genotype-module" data-tooltip="Select specific metabolic genotype">
+                    <div class="card-header">
+                        <h2>Genotype</h2>
+                        <span class="info-icon">i</span>
+                    </div>
+                    <select class="custom-select" id="genotype-select">
+                        <option value="normal">Normal (Extensive Metabolizer)</option>
+                        <option value="poor">Poor Metabolizer</option>
+                        <option value="rapid">Rapid Metabolizer</option>
+                    </select>
+                </div>
+
+                <div class="card module-card" id="dose-input-module" data-tooltip="Set dosing parameters">
+                    <div class="card-header">
+                        <h2>Dose Input</h2>
+                    </div>
+                    <div class="input-form">
+                        <div class="input-group">
+                            <label>Dose Amount (mg)</label>
+                            <input type="number" id="dose-amount" value="500">
+                        </div>
+                        <div class="input-group">
+                            <label>Interval (hrs)</label>
+                            <input type="number" id="dose-interval" value="8">
+                        </div>
+                        <div class="input-group">
+                            <label>Duration (days)</label>
+                            <input type="number" id="sim-duration" value="7">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card module-card" id="risk-meter-module" data-tooltip="Current calculated risk level">
+                    <div class="card-header">
+                        <h2>Risk Meter</h2>
+                    </div>
+                    <div class="risk-display">
+                        <div class="risk-badge safe" id="risk-badge">SAFE</div>
+                        <div class="risk-scale">
+                            <div class="risk-fill" id="risk-fill" style="width: 20%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Center Panel (Liver Visual) -->
+            <section class="center-panel">
+                <div class="card module-card main-organ-card" id="liver-state-module"
+                    data-tooltip="Current state of the liver">
+                    <div class="organ-header">
+                        <h2>Hepatic Engine</h2>
+                        <div class="live-tag">LIVE SCAN</div>
+                    </div>
+                    <div class="organ-container" id="liver-3d-container">
+                        <canvas id="liver-canvas"></canvas>
+                        <div class="scan-line"></div>
+                    </div>
+                    <div class="state-summary" id="state-summary">
+                        <div class="summary-item">
+                            <span class="label">Status:</span> <span class="value nominal">Nominal</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="label">Toxicity Buildup:</span> <span class="value">Low (12%)</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Panel -->
+            <aside class="right-panel">
+                <div class="card module-card chart-module" id="concentration-timeline-module"
+                    data-tooltip="Drug concentration over time">
+                    <h2>Concentration Timeline</h2>
+                    <div class="chart-area" id="chart-area">
+                        <!-- Chart placeholder using SVG -->
+                        <svg viewBox="0 0 400 200" class="mock-chart">
+                            <defs>
+                                <linearGradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
+                                    <stop offset="0%" stop-color="rgba(0,229,255,0.4)" />
+                                    <stop offset="100%" stop-color="rgba(0,229,255,0)" />
+                                </linearGradient>
+                            </defs>
+                            <path
+                                d="M0,200 L0,180 L50,40 L100,150 L150,50 L200,160 L250,60 L300,170 L350,70 L400,175 L400,200 Z"
+                                fill="url(#chartGradient)"></path>
+                            <polyline points="0,180 50,40 100,150 150,50 200,160 250,60 300,170 350,70 400,175"
+                                class="chart-line" />
+                        </svg>
+                        <div class="tox-threshold-line"></div>
+                        <span class="tox-label">Toxicity Threshold</span>
+                    </div>
+                </div>
+
+                <div class="card module-card log-module" id="exposure-log-module"
+                    data-tooltip="Historical progression log">
+                    <h2>Exposure Progress Log</h2>
+                    <ul class="progress-log" id="progress-log">
+                        <li><span class="time">[00:00:00]</span> > Initialization complete.</li>
+                        <li><span class="time">[00:00:01]</span> > Awaiting parameters...</li>
+                    </ul>
+                </div>
+            </aside>
+        </main>
+    </div>
+
+    <!-- Tooltip Element -->
+    <div id="custom-tooltip" class="tooltip"></div>
+
+    <!-- Three.js Library & Controls -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+
+    <script src="js/liver3d.js"></script>
+    <script src="js/app.js"></script>
+</body>
+
+</html>
